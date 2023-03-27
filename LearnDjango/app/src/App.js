@@ -56,7 +56,7 @@ function MainPage() {
       if (res.ok) {
         const data = await res.json();
 
-        setPeople(current => [...current, data[0]]);
+        setPeople(current => [...current, data]);
 
         setFormData({ firstname: '', lastname: '' });
       } else {
@@ -69,7 +69,7 @@ function MainPage() {
 
   function handleDelete(pk) {
     setPeople((current) =>
-      current.filter((person) => person.pk !== pk)
+      current.filter((person) => person.id !== pk)
     );
   }
 
@@ -102,7 +102,7 @@ function MainPage() {
       </form>
 
       {people.map(person => (
-        <Person onDelete={handleDelete} key={person.pk} pk={person.pk} firstname={person.fields.firstname} lastname={person.fields.lastname} />
+        <Person onDelete={handleDelete} key={person.id} pk={person.id} firstname={person.firstname} lastname={person.lastname} />
       ))}
     </div>
   );
@@ -119,8 +119,67 @@ function AboutPage() {
 }
 
 function LoginPage() {
-  return (
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
+  const handleSubmit = event => {
+    event.preventDefault();
+    console.log(`Username: ${username}, Password: ${password}`);
+  };
+
+  return (
+    <div className="mt-5">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto">
+        <div className="md:flex md:items-center mb-6">
+          <div className="md:w-1/3">
+            <label
+              htmlFor="username"
+              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+            >
+              Username
+            </label>
+          </div>
+          <div className="md:w-2/3">
+            <input
+              type="text"
+              id="username"
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+              value={username}
+              onChange={event => setUsername(event.target.value)}
+            />
+          </div>
+        </div>
+        <div className="md:flex md:items-center mb-6">
+          <div className="md:w-1/3">
+            <label
+              htmlFor="password"
+              className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+            >
+              Password
+            </label>
+          </div>
+          <div className="md:w-2/3">
+            <input
+              type="password"
+              id="password"
+              className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+              value={password}
+              onChange={event => setPassword(event.target.value)}
+            />
+          </div>
+        </div>
+        <div className="md:flex md:items-center">
+          <div className="md:w-1/3"></div>
+          <div className="md:w-2/3">
+            <button
+              type="submit"
+              className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded">
+              Sign In
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   )
 }
 
