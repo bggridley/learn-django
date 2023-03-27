@@ -18,8 +18,14 @@ from django.urls import path
 from . import views
 from django.views.generic import TemplateView
 
+index = TemplateView.as_view(template_name='index.html')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('person/', views.person),
-    path('', TemplateView.as_view(template_name='index.html'))
+    #path('login/', views.login),
+    
+    path('', index),
+    path('about/', index),
+    path('login/', index)
 ]

@@ -2,10 +2,21 @@ from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.core.serializers import serialize
 from django.views.decorators.csrf import csrf_exempt
-from django.core.serializers.json import DjangoJSONEncoder
+from django.views import View
 
 import json
 from .models import Person
+
+from .forms import LoginForm
+
+class LoginView(View):
+    form_class = LoginForm
+    def get(self, req, *args, **kargs):
+        form = self.form_class()
+        return render(
+            
+        )
+
 
 @csrf_exempt # temporary until auth is done
 def person(req):

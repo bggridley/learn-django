@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function Person({ onDelete, pk, firstname, lastname }) {
 
@@ -28,7 +29,7 @@ function Person({ onDelete, pk, firstname, lastname }) {
   );
 }
 
-function App() {
+function MainPage() {
   const [people, setPeople] = useState([]);
   const [formData, setFormData] = useState({ firstname: '', lastname: '' });
 
@@ -101,10 +102,68 @@ function App() {
       </form>
 
       {people.map(person => (
-        <Person onDelete={handleDelete} pk={person.pk} firstname={person.fields.firstname} lastname={person.fields.lastname} />
+        <Person onDelete={handleDelete} key={person.pk} pk={person.pk} firstname={person.fields.firstname} lastname={person.fields.lastname} />
       ))}
     </div>
   );
+}
+
+function AboutPage() {
+  return (
+    <div>
+      <div className="flex justify-center mt-5">
+        <p>Django and react are really nice. I'm getting the hang of tailwind too.</p>
+      </div>
+    </div>
+  )
+}
+
+function LoginPage() {
+  return (
+
+  )
+}
+
+function Navbar() {
+  return (
+    <nav className="bg-black p-3">
+      <a href="/" className="text-white font-bold text-lg mr-4">
+        FunDjango
+      </a>
+      <a href="/about" className="text-white hover:text-gray-200 mr-4">
+        About
+      </a>
+      <a href="/login" className="text-white hover:text-gray-200">
+        Login
+      </a>
+    </nav>
+  )
+}
+
+function App() {
+  const [currentPage, setCurrentPage] = useState(<MainPage />)
+
+
+  return (
+    <div>
+      <Navbar />
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainPage />}>
+          </Route>
+
+          <Route path="/about" element={<AboutPage />}>
+          </Route>
+
+          <Route path="/login" element={<LoginPage />}>
+          </Route>
+
+
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
 }
 
 export default App;
