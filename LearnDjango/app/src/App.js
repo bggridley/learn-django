@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 
 function Person({ onDelete, pk, firstname, lastname }) {
 
@@ -56,9 +56,14 @@ function MainPage() {
       if (res.ok) {
         const data = await res.json();
 
-        setPeople(current => [...current, data]);
+        if (!data.message) {
 
-        setFormData({ firstname: '', lastname: '' });
+          setPeople(current => [...current, data]);
+
+          setFormData({ firstname: '', lastname: '' });
+        } else {
+          alert(data.message)
+        }
       } else {
         console.error('Create failed');
       }
@@ -118,13 +123,46 @@ function AboutPage() {
   )
 }
 
-function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function LoggedInPage() {
+  return (
+    <div>
+      <div className="flex justify-center mt-5">
+        <p>Logged in.</p>
+      </div>
+    </div>
+  )
+}
 
-  const handleSubmit = event => {
+function LoginPage() {
+  const navigate = useNavigate();
+  
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
+
+  const handleSubmit = async event => {
     event.preventDefault();
-    console.log(`Username: ${username}, Password: ${password}`);
+
+    const res = await fetch('http://localhost:8000/submitLogin/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: user,
+        password: pass,
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.message=='authenticated') {
+      
+      navigate('/loggedIn')
+    }
+
+    alert(data.message)
+
+
+    console.log(`Username: ${user}, Password: ${pass}`);
   };
 
   return (
@@ -144,8 +182,8 @@ function LoginPage() {
               type="text"
               id="username"
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              value={username}
-              onChange={event => setUsername(event.target.value)}
+              value={user}
+              onChange={event => setUser(event.target.value)}
             />
           </div>
         </div>
@@ -163,8 +201,8 @@ function LoginPage() {
               type="password"
               id="password"
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              value={password}
-              onChange={event => setPassword(event.target.value)}
+              value={pass}
+              onChange={event => setPass(event.target.value)}
             />
           </div>
         </div>
@@ -216,6 +254,9 @@ function App() {
           </Route>
 
           <Route path="/login" element={<LoginPage />}>
+          </Route>
+
+          <Route path="/loggedIn" element={<LoggedInPage />}>
           </Route>
 
 
